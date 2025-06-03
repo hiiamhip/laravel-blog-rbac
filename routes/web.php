@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Middleware\CheckAdminRole;
 use Illuminate\Support\Facades\Route;
@@ -13,14 +14,19 @@ Route::get('/', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return redirect()->route('posts.index');
+    })->name('dashboard');
+
+    Route::prefix('admin')->name('admin.')->middleware(CheckAdminRole::class)->group(function () {
+        Route::resource('categories', CategoryController::class)->except('show');
     });
+
+    Route::resource('posts', PostController::class);
+
+    Route::resource('posts.comments', CommentController::class)->shallow();
 });
 
-Route::prefix('admin')->name('admin.')->middleware(CheckAdminRole::class)->group(function () {
-    Route::resource('categories', CategoryController::class)->except('show');
-});
 
-Route::resource('posts', PostController::class);
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

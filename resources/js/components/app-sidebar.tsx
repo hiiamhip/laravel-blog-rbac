@@ -50,7 +50,7 @@ export function AppSidebar() {
             return [
                 {
                     title: 'Back to Blogs',
-                    href: '/posts/create',
+                    href: '/posts',
                     icon: BookOpen,
                 },
             ];

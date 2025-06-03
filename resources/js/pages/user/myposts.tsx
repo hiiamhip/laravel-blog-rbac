@@ -102,7 +102,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
 
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this post?')) {
-            router.delete(`/admin/posts/${id}`, {
+            router.delete(`/posts/${id}`, {
                 onSuccess: () => {
                     toast.success('Post deleted successfully', {
                         duration: 3000,
@@ -345,7 +345,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
                                     </SelectContent>{' '}
                                 </Select>{' '}
                             </div>
-                            <div className="space-y-2">
+                            {/* <div className="space-y-2">
                                 <Label htmlFor="published_at">Published At</Label>{' '}
                                 <Input
                                     id="published_at"
@@ -354,7 +354,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
                                     value={formData.published_at}
                                     onChange={handleInputChange}
                                 />
-                            </div>
+                            </div> */}
                             <DialogFooter>
                                 <Button type="button" variant="outline" onClick={() => setShowModal(false)}>
                                     Cancel{' '}
