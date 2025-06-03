@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AdminPostController extends Controller
 {
@@ -11,7 +14,9 @@ class AdminPostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::with(['category', 'user', 'comments.user'])->withCount('comments')->latest()->paginate(10);
+        $categories = Category::all();
+        return Inertia::render('admin/posts', ['categories' => $categories, 'posts' => $posts]);
     }
 
     /**
@@ -49,9 +54,11 @@ class AdminPostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $post->published_at = now();
+        $post->save();
+        return back()->with('Success', 'Post accepted successfully');
     }
 
     /**

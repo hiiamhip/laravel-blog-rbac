@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPostController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
@@ -18,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('admin')->name('admin.')->middleware(CheckAdminRole::class)->group(function () {
         Route::resource('categories', CategoryController::class)->except('show');
+        Route::resource('posts', AdminPostController::class);
     });
 
     Route::resource('posts', PostController::class);

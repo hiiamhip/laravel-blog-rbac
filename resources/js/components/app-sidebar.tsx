@@ -10,8 +10,8 @@ import AppLogo from './app-logo';
 
 const adminNavItems: NavItem[] = [
     {
-        title: 'Edit users blogs',
-        href: '/admin/edit',
+        title: 'Review all posts',
+        href: '/admin/posts',
         icon: NotebookPen,
     },
     {
@@ -59,11 +59,12 @@ export function AppSidebar() {
             return [
                 {
                     title: 'Admin Dashboard',
-                    href: '/admin/categories',
+                    href: '/admin/posts',
                     icon: Lock,
                 },
             ];
         }
+        return [];
     }, [user.role, isAdminPage]);
 
     return (
