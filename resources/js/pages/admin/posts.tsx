@@ -62,12 +62,13 @@ interface PostsPageProps {
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'My Posts',
-        href: '/myposts/create',
+        title: 'All User Posts',
+        href: '/admin/posts',
     },
 ];
 
 export default function PostsPage({ posts, categories }: PostsPageProps) {
+    console.log(posts);
     const [showModal, setShowModal] = useState(false);
     const [showCommentsModal, setShowCommentsModal] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -185,7 +186,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
 
     const handlePageChange = (page: number) => {
         router.get(
-            route('posts.index'),
+            route('admin.posts.index'),
             { page },
             {
                 preserveState: true,
@@ -233,8 +234,8 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
                                     </TableCell>
                                     {!post.published_at ? (
                                         <TableCell>
-                                            <div className="flex gap-2">
-                                                <Button variant="destructive" size="sm" onClick={() => handleAccept(post.id)}>
+                                            <div className="flex gap-2 pl-8">
+                                                <Button variant="outline" size="sm" onClick={() => handleAccept(post.id)}>
                                                     Accept
                                                 </Button>
                                             </div>
@@ -283,6 +284,9 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
                                 }
 
                                 const page = parseInt(link.label);
+                                if (isNaN(page)) {
+                                    return null;
+                                }
                                 return (
                                     <Button
                                         key={i}
