@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment as ModelsComment;
+use App\Http\Requests\StoreCommentRequest;
+use App\Models\Comment;
 use App\Models\Post;
-use Dom\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
-class CommentController extends Controller
+class CommentController extends BaseController
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use AuthorizesRequests;
+
+    public function __construct() {
+        $this->authorizeResource(Comment::class, 'comment');
+    }
+
     public function index()
     {
         //
@@ -29,15 +34,13 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Post $post)
+    public function store(StoreCommentRequest $request, Post $post)
     {
-        $validated = $request->validate([
-            'content' => 'required|string|max:1000',
-        ]);
-        $post->comments()->create([
-            'content' => $validated['content'],
-            'user_id' => auth()->id(),
-        ]);
+        $comment = new Comment($request->validated());
+        $comment->user()->associate(auth()->user());
+        $comment->post()->associate($post);
+        $comment->save();
+
         return back()->with('Success', 'Comment added successfully');
     }
 
@@ -68,10 +71,8 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Comment $comment)
     {
-        $comment = ModelsComment::findOrFail($id);
-        Gate::authorize('delete', $comment);
         $comment->delete();
         return back()->with('Success', 'Comment deleted successfully');
     }

@@ -18,11 +18,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::prefix('admin')->name('admin.')->middleware(CheckAdminRole::class)->group(function () {
-        Route::resource('categories', CategoryController::class)->except('show');
+        Route::resource('categories', CategoryController::class);
         Route::resource('posts', AdminPostController::class);
     });
 
     Route::resource('posts', PostController::class);
+    Route::get('my-posts', [PostController::class, 'myPosts'])->name('my-posts');
 
     Route::resource('posts.comments', CommentController::class)->shallow();
 });

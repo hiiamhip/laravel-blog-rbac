@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCategoryRequest;
+use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,7 +15,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::withCount('posts')->latest()->paginate(10);
+        $categories = Category::query()->withPostCount()->latest()->paginate(10);
+
         return Inertia::render('admin/categories', ['categories' => $categories]);
     }
 
@@ -28,12 +31,9 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCategoryRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories',
-        ]);
-        Category::create($validated);
+        Category::create($request->validated());
         return redirect()->route('admin.categories.index')->with('Success', 'Category created successfully');
     }
 
@@ -56,27 +56,20 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category = Category::findOrFail($id);
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,'.$id,
-        ]);
-        $category->update($validated);
+        $category->update($request->validated());
         return redirect()->route('admin.categories.index')->with('Success', 'Category updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category)
     {
-        $category = Category::findOrFail($id);
-
         if ($category->posts()->count() > 0) {
             return redirect()->route('admin.categories.index')->with('Error', 'Category has posts, cannot delete');
         }
-
         $category->delete();
         return redirect()->route('admin.categories.index')->with('Success', 'Category deleted successfully');
     }

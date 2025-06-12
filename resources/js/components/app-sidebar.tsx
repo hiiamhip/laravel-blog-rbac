@@ -29,7 +29,7 @@ const userNavItems: NavItem[] = [
     },
     {
         title: 'My blogs',
-        href: '/posts/create',
+        href: '/my-posts',
         icon: BookOpenText,
     },
 ];

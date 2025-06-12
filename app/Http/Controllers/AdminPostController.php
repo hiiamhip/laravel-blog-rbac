@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -14,7 +15,13 @@ class AdminPostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with(['category', 'user', 'comments.user'])->withCount('comments')->latest()->paginate(10);
+        $posts = Post::query()
+            ->withCategory()
+            ->withAuthor()
+            ->withCommentAndCommenter()
+            ->withCommentCount()
+            ->latest()
+            ->paginate(10);
         $categories = Category::all();
         return Inertia::render('admin/posts', ['categories' => $categories, 'posts' => $posts]);
     }
@@ -54,18 +61,18 @@ class AdminPostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->published_at = now();
-        $post->save();
+        $post->updateWithMeta($request->validated());
         return back()->with('Success', 'Post accepted successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('admin.posts.index')->with('Success', 'Post deleted successfully');
     }
 }

@@ -62,7 +62,7 @@ interface PostsPageProps {
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'My Posts',
-        href: '/myposts/create',
+        href: '/my-posts',
     },
 ];
 

@@ -68,7 +68,6 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function PostsPage({ posts, categories }: PostsPageProps) {
-    console.log(posts);
     const [showModal, setShowModal] = useState(false);
     const [showCommentsModal, setShowCommentsModal] = useState(false);
     const [selectedPost, setSelectedPost] = useState<Post | null>(null);
@@ -93,7 +92,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
 
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this post?')) {
-            router.delete(`/posts/${id}`, {
+            router.delete(`/admin/posts/${id}`, {
                 onSuccess: () => {
                     toast.success('Post deleted successfully', {
                         duration: 3000,
@@ -113,7 +112,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
     const handleAccept = (id: number) => {
         router.put(
             `/admin/posts/${id}`,
-            {},
+            { published_at: new Date().toISOString().slice(0, 19).replace('T', ' ') },
             {
                 onSuccess: () => {
                     toast.success('Post accepted successfully', {
@@ -122,7 +121,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
                     });
                 },
                 onError: () => {
-                    toast.error('Failed to delete post', {
+                    toast.error('Failed to accept post', {
                         duration: 3000,
                         position: 'top-right',
                     });
@@ -135,7 +134,7 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
         e.preventDefault();
 
         if (editPost) {
-            router.put(`/posts/${editPost.id}`, formData, {
+            router.put(`/admin/posts/${editPost.id}`, formData, {
                 onSuccess: () => {
                     setShowModal(false);
                     toast.success('Post updated successfully', {

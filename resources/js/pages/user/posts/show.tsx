@@ -42,6 +42,7 @@ interface PageProps {
         user: {
             id: number;
             name: string;
+            role: string;
         };
     };
     [key: string]: any;
@@ -61,6 +62,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function PostShow({ post }: PostShowProps) {
     const [comment, setComment] = useState('');
     const { auth } = usePage<PageProps>().props;
+
+    console.log(auth);
 
     const handleSubmitComment = (e: React.FormEvent) => {
         e.preventDefault();
@@ -147,7 +150,7 @@ export default function PostShow({ post }: PostShowProps) {
                                             <span className="font-semibold">{comment.user.name}</span>
                                             <span className="ml-2 text-sm text-gray-500">{new Date(comment.created_at).toLocaleDateString()}</span>
                                         </div>
-                                        {comment.user.id === auth.user.id && (
+                                        {(comment.user.id === auth.user.id || auth.user.role === 'admin') && (
                                             <Button variant="ghost" size="sm" onClick={() => handleDeleteComment(comment.id)}>
                                                 Delete
                                             </Button>
