@@ -84,15 +84,15 @@ class Post extends Model
         );
     }
 
-    public static function createWithMeta(array $data, User $user) {
+    public static function createWithMeta(array $data) {
         $post = new self($data);
 
         $post->slug = Str::slug($data['title']);
-        if ($user->role === 'admin' && $post->published_at === null) {
+        if (auth()->user()->role === 'admin' && $post->published_at === null) {
             $post->published_at = now();
         }
 
-        $post->user()->associate($user);
+        $post->user()->associate(auth()->user());
 
         $post->save();
 

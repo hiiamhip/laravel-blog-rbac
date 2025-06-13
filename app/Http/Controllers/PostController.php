@@ -63,7 +63,7 @@ class PostController extends BaseController
      */
     public function store(StorePostRequest $request)
     {
-        Post::createWithMeta($request->validated(), auth()->user());
+        Post::createWithMeta($request->validated());
         return redirect()->route('posts.create')->with('Success', 'Post added successfully');
     }
 
