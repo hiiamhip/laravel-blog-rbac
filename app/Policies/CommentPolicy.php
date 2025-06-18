@@ -11,6 +11,15 @@ class CommentPolicy
     /**
      * Determine whether the user can view any models.
      */
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return null;
+    }
+
     public function viewAny(User $user): bool
     {
         return true;
@@ -37,7 +46,7 @@ class CommentPolicy
      */
     public function update(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->role === 'admin';
+        return $user->id === $comment->user_id;
     }
 
     /**
@@ -45,12 +54,7 @@ class CommentPolicy
      */
     public function delete(User $user, Comment $comment): bool
     {
-        if ($comment->user->role === 'admin') {
-            return false;
-        }
-
         return $user->id === $comment->user_id
-            || $user->role === 'admin'
             || $user->id === $comment->post->user_id;
     }
 

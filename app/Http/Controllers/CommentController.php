@@ -6,14 +6,10 @@ use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Routing\Controller as BaseController;
+// use Illuminate\Support\Facades\Gate;
 
-class CommentController extends BaseController
+class CommentController extends Controller
 {
-    use AuthorizesRequests;
-
     public function __construct() {
         $this->authorizeResource(Comment::class, 'comment');
     }

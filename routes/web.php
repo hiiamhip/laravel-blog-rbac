@@ -20,6 +20,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('admin')->name('admin.')->middleware(CheckAdminRole::class)->group(function () {
         Route::resource('categories', CategoryController::class);
         Route::resource('posts', AdminPostController::class);
+        Route::put('posts/{post}/approve', [AdminPostController::class, 'approve'])->name('posts.approve');
     });
 
     Route::resource('posts', PostController::class);

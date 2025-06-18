@@ -8,12 +8,9 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Routing\Controller as BaseController;
-class PostController extends BaseController
-{
-    use AuthorizesRequests;
 
+class PostController extends Controller
+{
     public function __construct() {
         $this->authorizeResource(Post::class, 'post');
     }
@@ -63,7 +60,11 @@ class PostController extends BaseController
      */
     public function store(StorePostRequest $request)
     {
-        Post::createWithMeta($request->validated());
+        $post = new Post($request->validated());
+        $post->publishIfAdmin();
+        $post->user()->associate(auth()->user());
+        $post->save();
+
         return redirect()->route('posts.create')->with('Success', 'Post added successfully');
     }
 
@@ -73,7 +74,6 @@ class PostController extends BaseController
     public function show(Post $post)
     {
         $post->load(['category', 'user', 'comments.user'])->loadCount('comments');
-
         return Inertia::render('user/posts/show', ['post' => $post]);
     }
 
@@ -90,7 +90,7 @@ class PostController extends BaseController
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->updateWithMeta($request->validated());
+        $post->update($request->validated());
         return redirect()->route('posts.create')->with('Success', 'Post updated successfully');
     }
 

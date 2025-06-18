@@ -63,8 +63,15 @@ class AdminPostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->updateWithMeta($request->validated());
+        $post->update($request->validated());
         return back()->with('Success', 'Post accepted successfully');
+    }
+
+    public function approve(Post $post)
+    {
+        $post->setPublished();
+        $post->save();
+        return back()->with('Success', 'Post approved successfully');
     }
 
     /**

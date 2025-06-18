@@ -84,27 +84,22 @@ class Post extends Model
         );
     }
 
-    public static function createWithMeta(array $data) {
-        $post = new self($data);
-
-        $post->slug = Str::slug($data['title']);
-        if (auth()->user()->role === 'admin' && $post->published_at === null) {
-            $post->published_at = now();
-        }
-
-        $post->user()->associate(auth()->user());
-
-        $post->save();
-
-        return $post;
+    public function setTitleAttribute($value) {
+        $this->attributes['title'] = $value;
+        $this->attributes['slug'] = Str::slug($value);
     }
 
-    public function updateWithMeta(array $data) {
-        if (array_key_exists('title', $data)) {
-            $this->slug = Str::slug($data['title']);
-        }
+    public function getPublishedAtAttribute() {
+        return $this->attributes['published_at'] ? Carbon::parse($this->attributes['published_at']) : null;
+    }
 
-        $this->fill($data);
-        return $this->save();
+    public function setPublished() {
+        $this->attributes['published_at'] = Carbon::now();
+    }
+
+    public function publishIfAdmin() {
+        if (auth()->user()->role === 'admin') {
+            $this->setPublished();
+        }
     }
 }

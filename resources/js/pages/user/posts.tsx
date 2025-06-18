@@ -178,7 +178,7 @@ export default function PostsPage({ posts = defaultPosts, categories = [], filte
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <CalendarDays className="h-4 w-4" />
-                                            <span>{post.created_at ? new Date(post.created_at).toLocaleDateString() : 'N/A'}</span>
+                                            <span>{post.created_at}</span>
                                         </div>
                                     </div>
 

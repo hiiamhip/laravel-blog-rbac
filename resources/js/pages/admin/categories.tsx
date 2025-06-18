@@ -140,7 +140,12 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
                                             <Button variant="outline" size="sm" onClick={() => handleEdit(category)}>
                                                 Edit
                                             </Button>
-                                            <Button variant="destructive" size="sm" onClick={() => handleDelete(category.id)}>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                disabled={category.posts_count > 0}
+                                                onClick={() => handleDelete(category.id)}
+                                            >
                                                 Delete
                                             </Button>
                                         </div>

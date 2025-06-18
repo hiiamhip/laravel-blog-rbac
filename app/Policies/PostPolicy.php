@@ -11,6 +11,15 @@ class PostPolicy
     /**
      * Determine whether the user can view any models.
      */
+    public function before(User $user, string $ability): bool|null
+    {
+        if ($user->role === 'admin') {
+            return true;
+        }
+
+        return null;
+    }
+
     public function viewAny(User $user): bool
     {
         return true;
@@ -37,7 +46,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->role === 'admin';;
+        return $user->id === $post->user_id;
     }
 
     /**
@@ -45,7 +54,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post): bool
     {
-        return $user->id === $post->user_id || $user->role === 'admin';;
+        return $user->id === $post->user_id;
     }
 
     /**

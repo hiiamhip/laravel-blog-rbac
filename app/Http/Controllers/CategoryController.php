@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteCategoryRequest;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
@@ -65,11 +66,8 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(DeleteCategoryRequest $request, Category $category)
     {
-        if ($category->posts()->count() > 0) {
-            return redirect()->route('admin.categories.index')->with('Error', 'Category has posts, cannot delete');
-        }
         $category->delete();
         return redirect()->route('admin.categories.index')->with('Success', 'Category deleted successfully');
     }

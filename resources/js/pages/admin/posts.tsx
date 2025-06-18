@@ -109,10 +109,10 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
         }
     };
 
-    const handleAccept = (id: number) => {
+    const handleApprove = (id: number) => {
         router.put(
-            `/admin/posts/${id}`,
-            { published_at: new Date().toISOString().slice(0, 19).replace('T', ' ') },
+            `/admin/posts/${id}/approve`,
+            {},
             {
                 onSuccess: () => {
                     toast.success('Post accepted successfully', {
@@ -234,8 +234,8 @@ export default function PostsPage({ posts, categories }: PostsPageProps) {
                                     {!post.published_at ? (
                                         <TableCell>
                                             <div className="flex gap-2 pl-8">
-                                                <Button variant="outline" size="sm" onClick={() => handleAccept(post.id)}>
-                                                    Accept
+                                                <Button variant="outline" size="sm" onClick={() => handleApprove(post.id)}>
+                                                    Approve
                                                 </Button>
                                             </div>
                                         </TableCell>
